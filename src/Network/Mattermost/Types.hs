@@ -711,7 +711,10 @@ instance A.FromJSON PostProps where
     postPropsFromWebhookStr   <- v .:? "from_webhook"
     let postPropsFromWebhook = do
             s <- postPropsFromWebhookStr
-            return $ s == ("true"::Text)
+            return $ case s of
+                   (A.Bool x) -> x
+                   (A.String x) -> x == ("true"::Text)
+                   _ -> False
     postPropsAttachments      <- v .:? "attachments"
     postPropsNewHeader        <- v .:? "new_header"
     postPropsOldHeader        <- v .:? "old_header"
